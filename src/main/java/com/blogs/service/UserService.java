@@ -11,9 +11,9 @@ public interface UserService {
 
     LoginVo login(LoginDto loginDto);
 
-    Void registerForEmail(RegisterForEmailDto registerForEmailDto);
+    void registerForEmail(RegisterForEmailDto registerForEmailDto);
 
-    Void registerForPhone(RegisterForPhoneDto registerForPhoneDto);
+    void registerForPhone(RegisterForPhoneDto registerForPhoneDto);
 
 
 }

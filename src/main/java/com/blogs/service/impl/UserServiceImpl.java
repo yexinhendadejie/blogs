@@ -3,7 +3,9 @@ package com.blogs.service.impl;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.blogs.common.exception.ServiceException;
 import com.blogs.domain.dto.LoginDto;
 import com.blogs.domain.dto.RegisterForEmailDto;
@@ -16,6 +18,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+
+import java.util.Optional;
 
 import static com.blogs.common.global.GlobalConstants.UNAME;
 
@@ -101,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     // email注册 电子邮箱+验证码+密码
     @Override
-    public Void registerForEmail(RegisterForEmailDto registerForEmailDto) {
+    public void registerForEmail(RegisterForEmailDto registerForEmailDto) {
         // 拿到邮件
         String email = registerForEmailDto.getEmail();
 
@@ -122,27 +126,31 @@ public class UserServiceImpl implements UserService {
 
 
         // 验证完之后加入数据库
-        User user = new User(UNAME,registerForEmailDto.getPwd1(),null,email);
+        User user = new User(UNAME, registerForEmailDto.getPwd1(), null, email);
         userMapper.insert(user);
-        return null;
     }
 
     // 手机注册 手机号+密码
     @Override
-    public Void registerForPhone(RegisterForPhoneDto registerForPhoneDto) {
+    public void registerForPhone(RegisterForPhoneDto registerForPhoneDto) {
         // 拿到手机号
         String phone = registerForPhoneDto.getPhone();
 
         QueryWrapper<User> userByPhone = new QueryWrapper<>();
-        userByPhone.eq("phone",phone);
+        userByPhone.eq("phone", phone);
 
         User selPhone = userMapper.selectOne(userByPhone);
-        if(selPhone != null) throw new ServiceException("手机号已经存在,请重新输入手机号");
+//        String selPhone =  Optional.ofNullable(userMapper.selectOne(Wrappers.<User>lambdaQuery()
+//                .eq(User::getPhone, phone)))
+//                .orElseThrow(() -> new ServiceException("手机号已经存在,请重新输入手机号"))
+//                .getPhone();
+//
+//        Wrappers.<User>lambdaQuery().eq(User::getPhone, phone);
+        if (selPhone != null) throw new ServiceException("手机号已经存在,请重新输入手机号");
 
         // 验证完之后加入数据库
-        User user = new User(UNAME, registerForPhoneDto.getPwd(), phone,null);
+        User user = new User(UNAME, registerForPhoneDto.getPwd(), phone, null);
         userMapper.insert(user);
-        return null;
     }
 
 
