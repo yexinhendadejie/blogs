@@ -8,6 +8,7 @@ class BlogsApplicationTests {
 
     @Test
     void contextLoads() {
+        System.out.println(123);
     }
 
 }
