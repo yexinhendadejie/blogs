@@ -1,6 +1,6 @@
 package com.blogs.controller;
 
-import com.blogs.domain.vo.UploadVo;
+import com.blogs.domain.vo.user.UploadVo;
 import com.blogs.service.UploadService;
 import com.blogs.utils.Resp;
 import org.springframework.web.bind.annotation.PostMapping;

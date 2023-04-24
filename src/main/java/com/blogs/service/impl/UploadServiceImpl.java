@@ -2,7 +2,7 @@ package com.blogs.service.impl;
 
 import com.blogs.common.exception.ServiceException;
 import com.blogs.common.resultcode.ResultCodeEnum;
-import com.blogs.domain.vo.UploadVo;
+import com.blogs.domain.vo.user.UploadVo;
 import com.blogs.service.UploadService;
 import com.blogs.utils.UploadUtil;
 import org.springframework.stereotype.Service;

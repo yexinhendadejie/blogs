@@ -24,7 +24,7 @@ public class User {
 	private String pwd;
 
 	// 出生日期
-	private String born;
+	private Timestamp born;
 
 	// 兴趣爱好
 	private String hobby;
@@ -33,19 +33,13 @@ public class User {
 	private String label;
 
 	// 性别 0->男 1->女
-	private String sex;
+	private Boolean sex;
 
 	// 手机号
 	private String phone;
 
 	// 邮箱
 	private String email;
-
-	// 点赞总数
-	private Integer likeCount;
-
-	//  点踩总数
-	private Integer downCount;
 
 	// 修改时间
 	private Timestamp updateTime;

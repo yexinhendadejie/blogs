@@ -9,7 +9,7 @@ public class GlobalConstants {
     // 单位min
     public static final Integer CAPTCHA_EXPIRED = 5;
 
-    public static final String UNAME = "user_"+ Convert.toStr(System.currentTimeMillis());
+    public static final String UNAME = "user"+ Convert.toStr(System.currentTimeMillis());
 
     public static final Integer RECRUITMENT_LIST_PAGE_SIZE = 10;
     public static final Integer HUNT_LIST_PAGE_SIZE = 10;

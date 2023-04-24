@@ -1,4 +1,4 @@
-package com.blogs.domain.vo;
+package com.blogs.domain.vo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

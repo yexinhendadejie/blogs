@@ -9,10 +9,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /*
-*
-*sa-token配置类
-*
-* */
+ *
+ *sa-token配置类
+ *
+ * */
 
 @Configuration
 public class SaTokenConfigure implements WebMvcConfigurer {
@@ -20,10 +20,13 @@ public class SaTokenConfigure implements WebMvcConfigurer {
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(new SaInterceptor(handle -> {
       SaRouter.match("/**")
-              .notMatch(GlobalConstants.EXCLUDE_PATH_PATTERNS)
-              .notMatch("/send/**")
-              .notMatch("/user/**")
-              .check(r -> StpUtil.checkLogin());
+          .notMatch(GlobalConstants.EXCLUDE_PATH_PATTERNS)
+          .notMatch("/send/**")
+          .notMatch("/user/login")
+          .notMatch("/user/registerForEmail")
+          .notMatch("/user/registerForPhone")
+          .notMatch("/user/registerForUname")
+          .check(r -> StpUtil.checkLogin());
     })).addPathPatterns("/**");
   }
 }

@@ -1,4 +1,4 @@
-package com.blogs.domain.dto;
+package com.blogs.domain.dto.user;
 
 import com.blogs.common.validator.TypeEnum;
 import com.blogs.common.validator.anno.LoginTypeEnum;
