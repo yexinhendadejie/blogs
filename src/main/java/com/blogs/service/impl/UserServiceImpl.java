@@ -77,18 +77,15 @@ public class UserServiceImpl implements UserService {
 
     // 通过uname去数据库查找
     if (loginDto.getLoginType().equals("uname")) {
-      // 创建条件
-      QueryWrapper<User> wrapperByUname = new QueryWrapper<>();
-      wrapperByUname.eq("uname", loginDto.getAccount());
-      User userForPhone = userMapper.selectOne(wrapperByUname);
-      if (userForPhone == null) throw new ServiceException("uname用户不存在");
-
-      wrapperByPwd.eq("uname", loginDto.getAccount());
-      User userForPwd = userMapper.selectOne(wrapperByPwd);
-      if (userForPwd == null) throw new ServiceException("密码错误");
+      // 查找数据库是否存在uname
+      User user = null;
+      user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
+          .eq(User::getUname, loginDto.getAccount())
+          .eq(User::getPwd, BUtils.encrypt(loginDto.getPwd())));
+      Optional.ofNullable(user).orElseThrow(() -> new ServiceException("用户不存在或密码错误"));
 
       //  签发token
-      StpUtil.login(userForPwd.getId());
+      StpUtil.login(user.getId());
       // 拿到token
       SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
 
@@ -113,10 +110,10 @@ public class UserServiceImpl implements UserService {
 
 
     // 验证码验证
-    if(!registerForEmailDto.getCaptcha().equals( "88888")){
-    if (Boolean.FALSE.equals(stringRedisTemplate.hasKey(email))) throw new ServiceException("验证码已失效");
-    String captcha = stringRedisTemplate.opsForValue().get(email);
-    if (!captcha.equals(registerForEmailDto.getCaptcha())) throw new ServiceException("验证码不正确");
+    if (!registerForEmailDto.getCaptcha().equals("88888")) {
+      if (Boolean.FALSE.equals(stringRedisTemplate.hasKey(email))) throw new ServiceException("验证码已失效");
+      String captcha = stringRedisTemplate.opsForValue().get(email);
+      if (!captcha.equals(registerForEmailDto.getCaptcha())) throw new ServiceException("验证码不正确");
     }
     stringRedisTemplate.delete(email);
 
@@ -155,13 +152,13 @@ public class UserServiceImpl implements UserService {
   @Override
   public void registerForUname(RegisterForUnameDto registerForUnameDto) {
     User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUname, registerForUnameDto.getUname()));
-    Optional.of(user!=null).orElseThrow(() -> new ServiceException("用户名已存在"));
+    Optional.of(user != null).orElseThrow(() -> new ServiceException("用户名已存在"));
 
     // 密码是否相同
-    Optional.of(!registerForUnameDto.getPwd1().equals(registerForUnameDto.getPwd2())).orElseThrow(()-> new ServiceException("两次密码不相同"));
+    Optional.of(!registerForUnameDto.getPwd1().equals(registerForUnameDto.getPwd2())).orElseThrow(() -> new ServiceException("两次密码不相同"));
 
     // 验证完之后加入数据库
-    userMapper.insert(new User(registerForUnameDto.getUname(), BUtils.encrypt(registerForUnameDto.getPwd1()),null, null));
+    userMapper.insert(new User(registerForUnameDto.getUname(), BUtils.encrypt(registerForUnameDto.getPwd1()), null, null));
   }
 
 
@@ -173,7 +170,7 @@ public class UserServiceImpl implements UserService {
     Optional.ofNullable(user.getEmail()).orElseThrow(() -> new ServiceException("邮箱不存在"));
 
     // Redis从拿到验证码
-    if(!updatePwdDto.getCaptcha() .equals( "88888")){
+    if (!updatePwdDto.getCaptcha().equals("88888")) {
       String captcha = stringRedisTemplate.opsForValue().get(updatePwdDto.getEmail());
       if (!updatePwdDto.getCaptcha().equals(captcha)) throw new ServiceException("验证码错误，请重新输入");
     }
