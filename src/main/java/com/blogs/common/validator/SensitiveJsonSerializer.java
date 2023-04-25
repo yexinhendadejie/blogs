@@ -17,7 +17,7 @@ import java.util.Objects;
  * 序列化注解自定义实现
  * JsonSerializer<String>：指定String 类型，serialize()方法用于将修改后的数据载入
  */
-public class SensitiveJsonSerializerValidator extends JsonSerializer<String> implements ContextualSerializer {
+public class SensitiveJsonSerializer extends JsonSerializer<String> implements ContextualSerializer {
     private SensitiveStrategy strategy;
 
     @Override
