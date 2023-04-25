@@ -2,6 +2,7 @@ package com.blogs.service;
 
 import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
+import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
 
 public interface UserService {
 
@@ -23,9 +24,9 @@ public interface UserService {
     void updateUserInfo(UserDto userDto);
 
     // 修改邮箱
-    void updateEmail(UpdateEmailPhoneDto updateEmailPhoneDto);
+    UpdateEmailPhoneVo updateEmail(UpdateEmailPhoneDto updateEmailPhoneDto);
 
     // 修改手机号
 
-    void updatePhone(UpdateEmailPhoneDto updateEmailPhoneDto);
+    UpdateEmailPhoneVo updatePhone(UpdateEmailPhoneDto updateEmailPhoneDto);
 }

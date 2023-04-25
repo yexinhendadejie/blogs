@@ -3,6 +3,7 @@ package com.blogs.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
+import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
 import com.blogs.service.UserService;
 import com.blogs.utils.Resp;
 import org.springframework.validation.annotation.Validated;
@@ -68,15 +69,13 @@ public class UserController {
 
   // 修改邮箱
   @PostMapping("/updateEmail")
-  public Resp<Void> updateEmail(@Validated @RequestBody UpdateEmailPhoneDto updateEmailPhoneDto) {
-    userService.updateEmail(updateEmailPhoneDto);
-    return Resp.ok().msg("修改成功");
+  public Resp<UpdateEmailPhoneVo> updateEmail(@Validated @RequestBody UpdateEmailPhoneDto updateEmailPhoneDto) {
+    return Resp.ok(userService.updateEmail(updateEmailPhoneDto));
   }
 
   // 修改手机号
   @PostMapping("/updatePhone")
-  public Resp<Void> updatePhone(@Validated @RequestBody UpdateEmailPhoneDto updateEmailPhoneDto) {
-    userService.updatePhone(updateEmailPhoneDto);
-    return Resp.ok().msg("修改成功");
+  public Resp<UpdateEmailPhoneVo> updatePhone(@Validated @RequestBody UpdateEmailPhoneDto updateEmailPhoneDto) {
+    return Resp.ok(userService.updatePhone(updateEmailPhoneDto));
   }
 }
