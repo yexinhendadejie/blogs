@@ -1,6 +1,7 @@
 package com.blogs.common.global;
 
 import cn.hutool.core.convert.Convert;
+import io.swagger.models.auth.In;
 
 public class GlobalConstants {
 
@@ -9,6 +10,7 @@ public class GlobalConstants {
     // 单位min
     public static final Integer CAPTCHA_EXPIRED = 5;
 
+    public static final Integer PAGE_SIZE_DEFAULT = 5;
     public static final String UNAME = "user"+ Convert.toStr(System.currentTimeMillis());
 
     public static final Integer RECRUITMENT_LIST_PAGE_SIZE = 10;
