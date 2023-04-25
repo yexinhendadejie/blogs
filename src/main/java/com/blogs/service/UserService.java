@@ -19,4 +19,13 @@ public interface UserService {
     // 修改密码
     void updatePwd(UpdatePwdDto updatePwdDto);
 
+    // 修改用户信息
+    void updateUserInfo(UserDto userDto);
+
+    // 修改邮箱
+    void updateEmail(UpdateEmailPhoneDto updateEmailPhoneDto);
+
+    // 修改手机号
+
+    void updatePhone(UpdateEmailPhoneDto updateEmailPhoneDto);
 }

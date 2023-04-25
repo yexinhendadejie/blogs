@@ -1,5 +1,7 @@
 package com.blogs.domain.vo.user;
 
+import com.blogs.common.validator.anno.Sensitive;
+import com.yomahub.tlog.example.feign.enumnew.SensitiveStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +32,10 @@ public class UserVo {
   // 性别 0->男 1->女
   private Boolean sex;
 
+
   // 手机号
   private String phone;
+
 
   // 邮箱
   private String email;

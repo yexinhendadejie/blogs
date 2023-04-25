@@ -2,6 +2,7 @@ package com.blogs.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.blogs.common.exception.ServiceException;
@@ -176,7 +177,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // 验证码验证成功之后删除验证码
-    stringRedisTemplate.delete(updatePwdDto.getEmail());
+    stringRedisTemplate.delete(updatePwdDto.getCaptcha());
 
     // 看密码是否相同
     if (BUtils.encrypt(user.getPwd()).equals(BUtils.encrypt(updatePwdDto.getPwd())))
@@ -189,5 +190,70 @@ public class UserServiceImpl implements UserService {
 
   }
 
+  // 修改用户信息
+  @Override
+  public void updateUserInfo(UserDto userDto) {
+    if (userDto.getId() != StpUtil.getLoginIdAsInt()) {
+      throw new ServiceException("不得修改其他用户信息");
+    }
+
+    User user = CglibUtil.copy(userDto, User.class);
+
+    userMapper.updateById(user);
+  }
+
+  //修改邮箱
+  @Override
+  public void updateEmail(UpdateEmailPhoneDto updateEmailPhoneDto) {
+
+    if (updateEmailPhoneDto.getLoginType().equals("email")) {
+      if (updateEmailPhoneDto.getId() != StpUtil.getLoginIdAsInt()) throw new ServiceException("不得修改其他用户信息");
+      // 邮箱是否存在
+      User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getEmail, updateEmailPhoneDto.getAccount()));
+//    Optional.ofNullable(user).orElseThrow(() -> new ServiceException("邮箱已存在"));
+      if (user != null) throw new ServiceException("邮箱已存在");
+
+      // Redis从拿到验证码
+      if (!updateEmailPhoneDto.getCaptcha().equals("88888")) {
+        String captcha = stringRedisTemplate.opsForValue().get(updateEmailPhoneDto.getAccount());
+        if (!updateEmailPhoneDto.getCaptcha().equals(captcha)) throw new ServiceException("验证码错误，请重新输入");
+      }
+
+      // 验证码验证成功之后删除验证码
+      stringRedisTemplate.delete(updateEmailPhoneDto.getCaptcha());
+
+      //修改邮箱
+      User userById = userMapper.selectOne(Wrappers.<User>query().eq("id", updateEmailPhoneDto.getId()));
+      userById.setEmail(updateEmailPhoneDto.getAccount());
+      userMapper.updateById(userById);
+
+    }throw new ServiceException("类型不存在");
+  }
+
+  // 修改手机号
+  @Override
+  public void updatePhone(UpdateEmailPhoneDto updateEmailPhoneDto) {
+    // 判断类型
+    if (updateEmailPhoneDto.getLoginType().equals("phone")) {
+      // 验证手机号码
+      User user = userMapper.selectOne(Wrappers.<User>query().eq("id", StpUtil.getLoginIdAsInt()));
+      if (user.getPhone().equals(updateEmailPhoneDto.getAccount())) throw new ServiceException("修改的手机号相同");
+      user.setPhone(updateEmailPhoneDto.getAccount());
+      user.setId(StpUtil.getLoginIdAsInt());
+
+      // Redis从拿到验证码
+      if (!updateEmailPhoneDto.getCaptcha().equals("88888")) {
+        String captcha = stringRedisTemplate.opsForValue().get(updateEmailPhoneDto.getAccount());
+        if (!updateEmailPhoneDto.getCaptcha().equals(captcha)) throw new ServiceException("验证码错误，请重新输入");
+      }
+
+      // 验证码验证成功之后删除验证码
+      stringRedisTemplate.delete(updateEmailPhoneDto.getCaptcha());
+
+      //修改手机号
+      userMapper.updateById(user);
+
+    }throw new ServiceException("类型不存在");
+  }
 
 }

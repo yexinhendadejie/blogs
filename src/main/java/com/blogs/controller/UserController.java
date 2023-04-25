@@ -59,4 +59,24 @@ public class UserController {
     return Resp.ok().msg("退出成功");
   }
 
+  // 修改用户信息
+  @PostMapping("/updateUserInfo")
+  public Resp<Void> updateUserInfo(@Validated @RequestBody UserDto userDto) {
+    userService.updateUserInfo(userDto);
+    return Resp.ok().msg("修改成功");
+  }
+
+  // 修改邮箱
+  @PostMapping("/updateEmail")
+  public Resp<Void> updateEmail(@Validated @RequestBody UpdateEmailPhoneDto updateEmailPhoneDto) {
+    userService.updateEmail(updateEmailPhoneDto);
+    return Resp.ok().msg("修改成功");
+  }
+
+  // 修改手机号
+  @PostMapping("/updatePhone")
+  public Resp<Void> updatePhone(@Validated @RequestBody UpdateEmailPhoneDto updateEmailPhoneDto) {
+    userService.updatePhone(updateEmailPhoneDto);
+    return Resp.ok().msg("修改成功");
+  }
 }
