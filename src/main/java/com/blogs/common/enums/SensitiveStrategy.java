@@ -25,7 +25,6 @@ public enum SensitiveStrategy {
   // 密码
   PASSWORD(s -> s.replaceAll("(?<=.{4}).*(?=.{4})", "****"));
 
-
   private final Function<String, String> desensitizer;
 
   SensitiveStrategy(Function<String, String> desensitizer) {

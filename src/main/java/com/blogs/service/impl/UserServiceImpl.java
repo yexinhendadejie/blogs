@@ -161,11 +161,11 @@ public class UserServiceImpl implements UserService {
   @Override
   public void registerForUname(RegisterForUnameDto registerForUnameDto) {
     User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUname, registerForUnameDto.getUname()));
-    Optional.of(user != null).orElseThrow(() -> new ServiceException("用户名已存在"));
+    if(user != null) throw new ServiceException("用户名已存在");
 
     // 密码是否相同
-    Optional.of(!registerForUnameDto.getPwd1().equals(registerForUnameDto.getPwd2())).orElseThrow(() -> new ServiceException("两次密码不相同"));
-
+    if (!registerForUnameDto.getPwd1().equals(registerForUnameDto.getPwd2()))
+      throw new ServiceException("两次密码不相同");
     // 验证完之后加入数据库
     userMapper.insert(new User(registerForUnameDto.getUname(), BUtils.encrypt(registerForUnameDto.getPwd1()), null, null,Convert.toStr(System.currentTimeMillis())));
   }
