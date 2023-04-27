@@ -14,6 +14,9 @@ public class UserVo {
   // 用户Id
   private Integer id;
 
+  // uuid
+  private String uuid;
+
   // 账号
   private String uname;
 

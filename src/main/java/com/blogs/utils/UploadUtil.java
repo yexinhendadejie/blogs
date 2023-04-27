@@ -19,6 +19,7 @@ public class UploadUtil {
     // 头像支持的文件类型
     public static List<String> avatarSupport = Arrays.asList("jpg", "png");
 
+
     // 获取文件夹路径
     public static File createPublicPath() {
         String basePath = null;
@@ -57,6 +58,12 @@ public class UploadUtil {
 
         // 返回文件名的后缀
         return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    // 文件类型是否支持
+    public static boolean isSupport(MultipartFile file, List<String> support) {
+        String suffix = getSuffix(file.getOriginalFilename());
+        return support.contains(suffix);
     }
 
     // 上传文件

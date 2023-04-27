@@ -2,19 +2,25 @@ package com.blogs.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.blogs.common.exception.ServiceException;
+import com.blogs.common.global.GlobalConstants;
 import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
 import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
+import com.blogs.domain.vo.user.UploadVo;
 import com.blogs.entity.User;
 import com.blogs.mapper.UserMapper;
 import com.blogs.service.UserService;
 import com.blogs.utils.BUtils;
+import com.blogs.utils.UploadUtil;
+import io.netty.util.internal.StringUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -120,7 +126,7 @@ public class UserServiceImpl implements UserService {
     stringRedisTemplate.delete(email);
 
     // 验证完之后加入数据库
-    User user = new User(UNAME, BUtils.encrypt(registerForEmailDto.getPwd1()), null, email);
+    User user = new User(UNAME, BUtils.encrypt(registerForEmailDto.getPwd1()), null, email, Convert.toStr(System.currentTimeMillis()));
     userMapper.insert(user);
   }
 
@@ -145,7 +151,7 @@ public class UserServiceImpl implements UserService {
       if (selPhone != null) throw new ServiceException("手机号已经存在,请重新输入手机号");
 
       // 验证完之后加入数据库
-      User user = new User(UNAME, BUtils.encrypt(registerForPhoneDto.getPwd()), phone, null);
+      User user = new User(UNAME, BUtils.encrypt(registerForPhoneDto.getPwd()), phone, null,Convert.toStr(System.currentTimeMillis()));
       userMapper.insert(user);
     }
   }
@@ -160,7 +166,7 @@ public class UserServiceImpl implements UserService {
     Optional.of(!registerForUnameDto.getPwd1().equals(registerForUnameDto.getPwd2())).orElseThrow(() -> new ServiceException("两次密码不相同"));
 
     // 验证完之后加入数据库
-    userMapper.insert(new User(registerForUnameDto.getUname(), BUtils.encrypt(registerForUnameDto.getPwd1()), null, null));
+    userMapper.insert(new User(registerForUnameDto.getUname(), BUtils.encrypt(registerForUnameDto.getPwd1()), null, null,Convert.toStr(System.currentTimeMillis())));
   }
 
 
@@ -254,6 +260,23 @@ public class UserServiceImpl implements UserService {
       return new UpdateEmailPhoneVo(StpUtil.getLoginIdAsInt(), user.getPhone(), updateEmailPhoneDto.getLoginType());
     }
     throw new ServiceException("修改类型错误");
+  }
+
+  @Override
+  public UploadVo uploadAvatar(MultipartFile file) {
+    if(file.isEmpty()) throw new ServiceException("头像为空,请上传头像");
+
+    // 判断文件格式是否正确
+    UploadUtil.isSupport(file,UploadUtil.avatarSupport);
+
+    User user = userMapper.selectById(StpUtil.getLoginIdAsInt());
+    String avatar = user.getAvatar();
+    if (StringUtil.isNullOrEmpty(avatar)) avatar = "";
+    // 给默认头像
+
+
+
+    return null;
   }
 
 }

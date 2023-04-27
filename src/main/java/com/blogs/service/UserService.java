@@ -3,6 +3,8 @@ package com.blogs.service;
 import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
 import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
+import com.blogs.domain.vo.user.UploadVo;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
@@ -27,6 +29,8 @@ public interface UserService {
     UpdateEmailPhoneVo updateEmail(UpdateEmailPhoneDto updateEmailPhoneDto);
 
     // 修改手机号
-
     UpdateEmailPhoneVo updatePhone(UpdateEmailPhoneDto updateEmailPhoneDto);
+
+    // 上传头像
+    UploadVo uploadAvatar(MultipartFile file);
 }

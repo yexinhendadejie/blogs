@@ -16,7 +16,6 @@ public class UploadServiceImpl implements UploadService {
         if (file.isEmpty()) throw new ServiceException(ResultCodeEnum.FILE_UPLOAD_ERROR, "请上传文件");
         UploadVo uploadVo = new UploadVo();
 
-        System.out.println(file.getOriginalFilename());
         // 上传文件
         UploadUtil.upload(file);
         // 获得是图片还是文件
