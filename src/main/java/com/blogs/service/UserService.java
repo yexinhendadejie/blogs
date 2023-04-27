@@ -4,6 +4,7 @@ import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
 import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
 import com.blogs.domain.vo.user.UploadVo;
+import com.blogs.domain.vo.user.UserVo;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -33,4 +34,7 @@ public interface UserService {
 
     // 上传头像
     UploadVo uploadAvatar(MultipartFile file);
+
+    // 根据ID查询用户信息
+    UserVo selectById(Integer id);
 }

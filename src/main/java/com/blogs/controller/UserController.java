@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
 import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
+import com.blogs.domain.vo.user.UserVo;
 import com.blogs.service.UserService;
 import com.blogs.utils.Resp;
 import org.springframework.validation.annotation.Validated;
@@ -77,5 +78,11 @@ public class UserController {
   @PostMapping("/updatePhone")
   public Resp<UpdateEmailPhoneVo> updatePhone(@Validated @RequestBody UpdateEmailPhoneDto updateEmailPhoneDto) {
     return Resp.ok(userService.updatePhone(updateEmailPhoneDto));
+  }
+
+  // 根据ID查询用户信息
+  @GetMapping ("/{id}")
+  public Resp<UserVo> selectById(@PathVariable Integer id) {
+    return Resp.ok(userService.selectById(id));
   }
 }

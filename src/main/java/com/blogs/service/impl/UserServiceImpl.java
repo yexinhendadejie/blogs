@@ -12,6 +12,7 @@ import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
 import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
 import com.blogs.domain.vo.user.UploadVo;
+import com.blogs.domain.vo.user.UserVo;
 import com.blogs.entity.User;
 import com.blogs.mapper.UserMapper;
 import com.blogs.service.UserService;
@@ -277,6 +278,23 @@ public class UserServiceImpl implements UserService {
 
 
     return null;
+  }
+
+  // 根据ID查询用户信息
+  @Override
+  public UserVo selectById(Integer id) {
+
+    // 判断登录用户
+    if(id != StpUtil.getLoginIdAsInt()) throw new ServiceException("不得修改其他用户信息");
+
+    //查询用户
+    User userById = userMapper.selectById(id);
+
+    if (userById == null) throw new ServiceException("未查询到该用户");
+
+
+
+    return CglibUtil.copy(userById,UserVo.class);
   }
 
 }
