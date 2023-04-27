@@ -1,6 +1,7 @@
 package com.blogs.domain.vo.user;
 
 import com.blogs.common.validator.anno.Sensitive;
+import com.sun.xml.internal.ws.developer.Serialization;
 import com.yomahub.tlog.example.feign.enumnew.SensitiveStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class UserVo {
   // 账号
   private String uname;
 
+  @Serialization(strategy = SensitiveStrategy.class)
   // 密码
   private String pwd;
 

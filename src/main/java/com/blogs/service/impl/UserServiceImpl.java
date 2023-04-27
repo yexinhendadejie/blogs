@@ -271,7 +271,7 @@ public class UserServiceImpl implements UserService {
 
     User user = userMapper.selectById(StpUtil.getLoginIdAsInt());
     String avatar = user.getAvatar();
-    if (StringUtil.isNullOrEmpty(avatar)) avatar = "";
+
     // 给默认头像
 
 

@@ -21,7 +21,9 @@ public enum SensitiveStrategy {
   /**
    * 地址
    */
-  ADDRESS(s -> s.replaceAll("(\\S{3})\\S{2}(\\S*)\\S{2}", "$1****$2****"));
+  ADDRESS(s -> s.replaceAll("(\\S{3})\\S{2}(\\S*)\\S{2}", "$1****$2****")),
+  // 密码
+  PASSWORD(s -> s.replaceAll("(\\S)\\S(\\S*)","$1*$2"));
 
 
   private final Function<String, String> desensitizer;
