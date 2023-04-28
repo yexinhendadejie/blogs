@@ -43,5 +43,10 @@ public class PostServiceImpl implements PostService {
     return null;
   }
 
+  @Override
+  public void insertBlog() {
+
+  }
+
 
 }
