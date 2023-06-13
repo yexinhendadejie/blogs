@@ -46,11 +46,6 @@ public class GlobalExceptionHandler {
     return Resp.error(ResultCodeEnum.ERROR).msg(e.getMessage());
   }
 
-  @ExceptionHandler(RuntimeException.class)
-  public Resp runtimeException(RuntimeException e) {
-    log.warn(e.getMessage());
-    return Resp.error(ResultCodeEnum.ERROR).msg(e.getMessage());
-  }
 
 
   /***
@@ -83,5 +78,12 @@ public class GlobalExceptionHandler {
 
     log.warn("ConstraintViolationException: 请求参数校验错误错误: " + collect);
     return Resp.error(ResultCodeEnum.REQUEST_FIELD_IS_NOT_VALID, collect).msg(collect.get(0));
+  }
+
+
+  @ExceptionHandler(RuntimeException.class)
+  public Resp runtimeException(RuntimeException e) {
+    log.warn(e.getMessage());
+    return Resp.error(ResultCodeEnum.ERROR).msg(e.getMessage());
   }
 }

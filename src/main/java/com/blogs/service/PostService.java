@@ -8,7 +8,7 @@ import com.blogs.entity.Post;
 public interface PostService {
 
   // 查看所有博客
-  IPage<PostVo> findAllPost(PagePostDto pagePostDto);
+  IPage<PostVo> findAllPostByTime(PagePostDto pagePostDto);
 
   // 根据title查询博客
   IPage<PostVo> findByTitle(PagePostDto pagePostDto);

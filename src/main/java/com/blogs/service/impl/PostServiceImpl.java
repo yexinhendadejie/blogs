@@ -23,12 +23,12 @@ public class PostServiceImpl implements PostService {
 
   // 查看所有博客
   @Override
-  public IPage<PostVo> findAllPost(PagePostDto pagePostDto) {
+  public IPage<PostVo> findAllPostByTime(PagePostDto pagePostDto) {
     Page<Post> page = new Page<>(pagePostDto.getPageNum(), GlobalConstants.PAGE_SIZE_DEFAULT);
 
-    IPage<Post> postPage = postMapper.selectPage(page,Wrappers.<Post>query().like("user_id",
-        pagePostDto.getUserId())
-    );
+    Page<Post> postPage = postMapper.selectPage(page, Wrappers.<Post>lambdaQuery()
+        .eq(Post::getUserId, pagePostDto.getUserId())
+        .orderByDesc(Post::getCreateTime));
 
     return postPage.convert(blog -> CglibUtil.copy(blog, PostVo.class));
   }

@@ -54,12 +54,19 @@ public class User {
   // 创建时间
   private Timestamp createTime;
 
+  public User(String uuid, String uname, String pwd, String avatar) {
+    this.uuid = uuid;
+    this.uname = uname;
+    this.pwd = pwd;
+    this.avatar = avatar;
+  }
 
-  public User(String username, String pwd, String phone, String email, String uuid) {
+  public User(String username, String pwd, String phone, String email, String uuid, String avatar) {
     this.uname = username;
     this.pwd = pwd;
     this.phone = phone;
     this.email = email;
     this.uuid = uuid;
+    this.avatar=avatar;
   }
 }

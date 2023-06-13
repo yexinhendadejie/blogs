@@ -21,6 +21,7 @@ import com.blogs.utils.UploadUtil;
 import io.netty.util.internal.StringUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -39,68 +40,17 @@ public class UserServiceImpl implements UserService {
   // 登陆
   @Override
   public LoginVo login(LoginDto loginDto) {
-    QueryWrapper<User> wrapperByPwd = new QueryWrapper<>();
-    wrapperByPwd.eq("pwd", BUtils.encrypt(loginDto.getPwd()));
 
+    User loginUser = userMapper.getLoginUser(loginDto);
+    if (loginUser == null) throw new ServiceException("账号或密码错误");
 
-    // 通过手机号去数据库查找
-    if (loginDto.getLoginType().equals("phone")) {
-      // 创建条件
-      QueryWrapper<User> wrapperByPhone = new QueryWrapper<>();
-      wrapperByPhone.eq("phone", loginDto.getAccount());
-      User userForPhone = userMapper.selectOne(wrapperByPhone);
-      if (userForPhone == null) throw new ServiceException("电话号码不存在");
+    // 签发token
+    StpUtil.login(loginUser.getId());
+    // 拿到token
+    SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
 
-      wrapperByPwd.eq("phone", loginDto.getAccount());
-      User userForPwd = userMapper.selectOne(wrapperByPwd);
-      if (userForPwd == null) throw new ServiceException("密码错误");
+    return new LoginVo(saTokenInfo.getTokenName(), saTokenInfo.getTokenValue(), true);
 
-      //  签发token
-      StpUtil.login(userForPwd.getId());
-      // 拿到token
-      SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
-
-      return new LoginVo(saTokenInfo.getTokenName(), saTokenInfo.getTokenValue(), true);
-    }
-
-    // 通过邮箱去数据库查找
-    if (loginDto.getLoginType().equals("email")) {
-      // 创建条件
-      QueryWrapper<User> wrapperByEmail = new QueryWrapper<>();
-      wrapperByEmail.eq("email", loginDto.getAccount());
-      User userForPhone = userMapper.selectOne(wrapperByEmail);
-      if (userForPhone == null) throw new ServiceException("邮箱不存在");
-
-      wrapperByPwd.eq("email", loginDto.getAccount());
-      User userForPwd = userMapper.selectOne(wrapperByPwd);
-      if (userForPwd == null) throw new ServiceException("密码错误");
-
-      //  签发token
-      StpUtil.login(userForPwd.getId());
-
-      // 拿到token
-      SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
-
-      return new LoginVo(saTokenInfo.getTokenName(), saTokenInfo.getTokenValue(), true);
-    }
-
-    // 通过uname去数据库查找
-    if (loginDto.getLoginType().equals("uname")) {
-      // 查找数据库是否存在uname
-      User user = null;
-      user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
-          .eq(User::getUname, loginDto.getAccount())
-          .eq(User::getPwd, BUtils.encrypt(loginDto.getPwd())));
-      Optional.ofNullable(user).orElseThrow(() -> new ServiceException("用户不存在或密码错误"));
-
-      //  签发token
-      StpUtil.login(user.getId());
-      // 拿到token
-      SaTokenInfo saTokenInfo = StpUtil.getTokenInfo();
-
-      return new LoginVo(saTokenInfo.getTokenName(), saTokenInfo.getTokenValue(), true);
-    }
-    return null;
   }
 
   // email注册 电子邮箱+验证码+密码
@@ -127,7 +77,7 @@ public class UserServiceImpl implements UserService {
     stringRedisTemplate.delete(email);
 
     // 验证完之后加入数据库
-    User user = new User(UNAME, BUtils.encrypt(registerForEmailDto.getPwd1()), null, email, Convert.toStr(System.currentTimeMillis()));
+    User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForEmailDto.getPwd1().getBytes()), null, email, Convert.toStr(System.currentTimeMillis()), UploadUtil.avatarPath());
     userMapper.insert(user);
   }
 
@@ -152,7 +102,7 @@ public class UserServiceImpl implements UserService {
       if (selPhone != null) throw new ServiceException("手机号已经存在,请重新输入手机号");
 
       // 验证完之后加入数据库
-      User user = new User(UNAME, BUtils.encrypt(registerForPhoneDto.getPwd()), phone, null,Convert.toStr(System.currentTimeMillis()));
+      User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForPhoneDto.getPwd().getBytes()), phone, null, Convert.toStr(System.currentTimeMillis()), UploadUtil.avatarPath());
       userMapper.insert(user);
     }
   }
@@ -161,13 +111,13 @@ public class UserServiceImpl implements UserService {
   @Override
   public void registerForUname(RegisterForUnameDto registerForUnameDto) {
     User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUname, registerForUnameDto.getUname()));
-    if(user != null) throw new ServiceException("用户名已存在");
+    if (user != null) throw new ServiceException("用户名已存在");
 
     // 密码是否相同
     if (!registerForUnameDto.getPwd1().equals(registerForUnameDto.getPwd2()))
       throw new ServiceException("两次密码不相同");
     // 验证完之后加入数据库
-    userMapper.insert(new User(registerForUnameDto.getUname(), BUtils.encrypt(registerForUnameDto.getPwd1()), null, null,Convert.toStr(System.currentTimeMillis())));
+    userMapper.insert(new User(registerForUnameDto.getUname(), DigestUtils.md5DigestAsHex(registerForUnameDto.getPwd1().getBytes()), null, null, Convert.toStr(System.currentTimeMillis()), UploadUtil.avatarPath()));
   }
 
 
@@ -188,10 +138,10 @@ public class UserServiceImpl implements UserService {
     stringRedisTemplate.delete(updatePwdDto.getCaptcha());
 
     // 看密码是否相同
-    if (BUtils.encrypt(user.getPwd()).equals(BUtils.encrypt(updatePwdDto.getPwd())))
+    if (DigestUtils.md5DigestAsHex(user.getPwd().getBytes()).equals(DigestUtils.md5DigestAsHex((updatePwdDto.getPwd().getBytes()))))
       throw new ServiceException("密码与数据库密码相同");
 
-    user.setPwd(BUtils.encrypt(updatePwdDto.getPwd()));
+    user.setPwd(DigestUtils.md5DigestAsHex(updatePwdDto.getPwd().getBytes()));
     userMapper.updateById(user);
 
     StpUtil.logout();
@@ -217,7 +167,8 @@ public class UserServiceImpl implements UserService {
     if (updateEmailPhoneDto.getLoginType().equals("email")) {
       // 验证邮箱
       User user = userMapper.selectOne(Wrappers.<User>query().eq("id", StpUtil.getLoginIdAsInt()));
-      if (user.getEmail().equals(updateEmailPhoneDto.getAccount())) throw new ServiceException("修改的邮箱和旧邮箱相同");
+      if (user.getEmail().equals(updateEmailPhoneDto.getAccount()))
+        throw new ServiceException("修改的邮箱和旧邮箱相同");
       user.setEmail(updateEmailPhoneDto.getAccount());
       user.setId(StpUtil.getLoginIdAsInt());
 
@@ -243,7 +194,8 @@ public class UserServiceImpl implements UserService {
     if (updateEmailPhoneDto.getLoginType().equals("phone")) {
       // 验证邮箱
       User user = userMapper.selectOne(Wrappers.<User>query().eq("id", StpUtil.getLoginIdAsInt()));
-      if (user.getPhone().equals(updateEmailPhoneDto.getAccount())) throw new ServiceException("修改的电话和旧电话相同");
+      if (user.getPhone().equals(updateEmailPhoneDto.getAccount()))
+        throw new ServiceException("修改的电话和旧电话相同");
       user.setPhone(updateEmailPhoneDto.getAccount());
       user.setId(StpUtil.getLoginIdAsInt());
 
@@ -265,16 +217,15 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UploadVo uploadAvatar(MultipartFile file) {
-    if(file.isEmpty()) throw new ServiceException("头像为空,请上传头像");
+    if (file.isEmpty()) throw new ServiceException("头像为空,请上传头像");
 
     // 判断文件格式是否正确
-    UploadUtil.isSupport(file,UploadUtil.avatarSupport);
+    UploadUtil.isSupport(file, UploadUtil.avatarSupport);
 
     User user = userMapper.selectById(StpUtil.getLoginIdAsInt());
     String avatar = user.getAvatar();
 
     // 给默认头像
-
 
 
     return null;
@@ -285,7 +236,7 @@ public class UserServiceImpl implements UserService {
   public UserVo selectById(Integer id) {
 
     // 判断登录用户
-    if(id != StpUtil.getLoginIdAsInt()) throw new ServiceException("不得修改其他用户信息");
+    if (id != StpUtil.getLoginIdAsInt()) throw new ServiceException("不得修改其他用户信息");
 
     //查询用户
     User userById = userMapper.selectById(id);
@@ -293,8 +244,7 @@ public class UserServiceImpl implements UserService {
     if (userById == null) throw new ServiceException("未查询到该用户");
 
 
-
-    return CglibUtil.copy(userById,UserVo.class);
+    return CglibUtil.copy(userById, UserVo.class);
   }
 
 }

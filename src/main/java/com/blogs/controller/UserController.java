@@ -20,7 +20,7 @@ public class UserController {
   private UserService userService;
 
   // 登陆
-  @GetMapping("/login")
+  @PostMapping("/login")
   public Resp<LoginVo> login(@Validated @RequestBody LoginDto loginDto) {
     LoginVo loginVo = userService.login(loginDto);
     return Resp.ok(loginVo).msg("登陆成功");

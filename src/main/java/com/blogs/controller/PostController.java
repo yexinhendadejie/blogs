@@ -23,8 +23,8 @@ public class PostController {
   private PostService postService;
 
   // 查看所有博客
-  @PostMapping("/findAllPost")
-  public Resp<IPage<PostVo>> findAllPost(@Validated @RequestBody PagePostDto pagePostDto) {
-    return Resp.ok(postService.findAllPost(pagePostDto));
+  @PostMapping("/findAllPostByTime")
+  public Resp<IPage<PostVo>> findAllPostByTime(@Validated @RequestBody PagePostDto pagePostDto) {
+    return Resp.ok(postService.findAllPostByTime(pagePostDto));
   }
 }

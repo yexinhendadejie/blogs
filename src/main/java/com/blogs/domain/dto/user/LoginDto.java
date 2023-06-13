@@ -1,8 +1,5 @@
 package com.blogs.domain.dto.user;
 
-import com.blogs.common.validator.TypeEnum;
-import com.blogs.common.validator.anno.LoginTypeEnum;
-import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -15,8 +12,4 @@ public class LoginDto {
     @NotBlank(message = "密码不能为空")
     private String pwd;
 
-
-    @NotBlank(message = "登陆类型不得为空")
-    @LoginTypeEnum(enumValue = TypeEnum.LoginType.class)
-    private String loginType;
 }

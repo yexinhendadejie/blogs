@@ -66,6 +66,12 @@ public class UploadUtil {
         return support.contains(suffix);
     }
 
+    // 头像路径
+    public static String avatarPath() {
+        return "http://localhost:8081/resources/static/public/images/default.jpeg";
+
+    }
+
     // 上传文件
     public static String upload(MultipartFile file) {
         if (file.isEmpty()) throw new ServiceException("文件为空");
