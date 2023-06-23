@@ -8,6 +8,6 @@
     SELECT *
     FROM user
     WHERE (`uname` = #{account} or `email` = #{account}  or `phone` = #{account})
-      AND pwd = #{pwd}
+      AND pwd = md5(#{pwd})
   </select>
 </mapper>

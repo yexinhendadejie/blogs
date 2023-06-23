@@ -32,7 +32,7 @@ public class Mailer {
     account.setPort(465);
     account.setFrom("Hurd Jay<1471172689@qq.com>");
     account.setUser("1471172689");
-    account.setPass("trvgtcuhtjythfbe");
+    account.setPass("aresmlaisjodhacc");
     account.setStarttlsEnable(true);
     account.setSslEnable(true);
     account.setSocketFactoryClass("javax.net.ssl.SSLSocketFactory");

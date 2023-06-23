@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
   public void updatePwd(UpdatePwdDto updatePwdDto) {
 
     // 邮箱是否存在
-    User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getId, StpUtil.getLoginId()));
+    User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getEmail, updatePwdDto.getEmail()));
     Optional.ofNullable(user.getEmail()).orElseThrow(() -> new ServiceException("邮箱不存在"));
 
     // Redis从拿到验证码
@@ -143,8 +143,6 @@ public class UserServiceImpl implements UserService {
 
     user.setPwd(DigestUtils.md5DigestAsHex(updatePwdDto.getPwd().getBytes()));
     userMapper.updateById(user);
-
-    StpUtil.logout();
 
   }
 

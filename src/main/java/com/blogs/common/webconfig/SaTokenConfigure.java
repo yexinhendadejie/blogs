@@ -22,6 +22,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
       SaRouter.match("/**")
           .notMatch(GlobalConstants.EXCLUDE_PATH_PATTERNS)
           .notMatch("/send/**")
+          .notMatch("/user/updatePwd")
           .notMatch("/user/login")
           .notMatch("/user/registerForEmail")
           .notMatch("/user/registerForPhone")

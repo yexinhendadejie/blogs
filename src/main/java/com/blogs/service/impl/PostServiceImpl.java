@@ -21,7 +21,7 @@ public class PostServiceImpl implements PostService {
   @Resource
   private PostMapper postMapper;
 
-  // 查看所有博客
+  // 查看所有博
   @Override
   public IPage<PostVo> findAllPostByTime(PagePostDto pagePostDto) {
     Page<Post> page = new Page<>(pagePostDto.getPageNum(), GlobalConstants.PAGE_SIZE_DEFAULT);
