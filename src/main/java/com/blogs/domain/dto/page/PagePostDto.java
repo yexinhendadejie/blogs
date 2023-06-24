@@ -24,4 +24,7 @@ public class PagePostDto extends PageDto {
 
   // UpdateTime
   private Timestamp updateTime;
+
+  // 博客热门/最新分类
+  private String type;
 }

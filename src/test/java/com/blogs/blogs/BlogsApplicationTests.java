@@ -1,12 +1,15 @@
 package com.blogs.blogs;
 
-import cn.hutool.crypto.SecureUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.blogs.entity.Blog;
 import com.blogs.entity.User;
+import com.blogs.mapper.BlogMapper;
 import com.blogs.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,8 +17,11 @@ import java.util.stream.Collectors;
 @SpringBootTest
 class BlogsApplicationTests {
 
-    @Autowired
-    UserMapper userMapper;
+    @Resource
+    private UserMapper userMapper;
+
+    @Resource
+    private BlogMapper postMapper;
     @Test
     void contextLoads() {
 
@@ -33,11 +39,8 @@ class BlogsApplicationTests {
 
     @Test
     void setUSerInfo(){
-        User user  = new User();
-        user.setId(9);
-        user.setLabel("哈哈");
-
-        userMapper.updateById(user);
+        Blog userId = postMapper.selectOne(Wrappers.<Blog>query().eq("userId", 8));
+        System.out.println(userId);
 
     }
 

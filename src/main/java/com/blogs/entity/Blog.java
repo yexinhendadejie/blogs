@@ -1,5 +1,8 @@
 package com.blogs.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -9,9 +12,10 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
+public class Blog {
 
   // 帖子id
+  @TableId(value = "id",type = IdType.AUTO)
   private Integer id;
 
   // user用户自己的博客
@@ -24,6 +28,7 @@ public class Post {
   private String tag;
 
   // 博客的描述
+  @TableField(value = "`desc`")
   private String desc;
 
   // 博客的内容
