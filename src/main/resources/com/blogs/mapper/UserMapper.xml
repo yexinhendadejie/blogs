@@ -10,4 +10,9 @@
     WHERE (`uname` = #{account} or `email` = #{account}  or `phone` = #{account})
       AND pwd = md5(#{pwd})
   </select>
+  <select id="findByAccount" resultType="com.blogs.entity.User">
+    SELECT *
+    FROM user
+    WHERE `uname` = #{account} or `email` = #{account}  or `phone` = #{account}
+  </select>
 </mapper>

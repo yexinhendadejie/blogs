@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
   User getLoginUser(LoginDto loginDto);
+
+  // 根据账号查询用户
+  User findByAccount(@Param("account") String account);
 }

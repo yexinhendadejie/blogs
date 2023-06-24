@@ -92,4 +92,10 @@ public Resp<Void> updatePwdUpgrade(@Validated @RequestBody UpdatePwdUpgradeDto u
   public Resp<UserVo> selectById(@PathVariable Integer id) {
     return Resp.ok(userService.selectById(id));
   }
+
+  // 根据账号查询用户信息
+  @PutMapping ("/account/{account}")
+  public Resp<UserVo> selectByAccount(@PathVariable String account) {
+    return Resp.ok(userService.selectByAccount(account));
+  }
 }

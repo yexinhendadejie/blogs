@@ -41,5 +41,8 @@ public interface UserService {
     // 根据ID查询用户信息
     UserVo selectById(Integer id);
 
+    // 根据账号查询用户信息
+    UserVo selectByAccount(String account);
+
 
 }

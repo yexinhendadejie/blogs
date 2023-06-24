@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
       if (selPhone != null) throw new ServiceException("手机号已经存在,请重新输入手机号");
 
       // 验证完之后加入数据库
-      User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForPhoneDto.getPwd().getBytes()), phone, null, Convert.toStr(System.currentTimeMillis()),null);
+      User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForPhoneDto.getPwd().getBytes()), phone, null, Convert.toStr(System.currentTimeMillis()), null);
       userMapper.insert(user);
     }
   }
@@ -260,11 +260,17 @@ public class UserServiceImpl implements UserService {
 
     //查询用户
     User userById = userMapper.selectById(id);
-
     if (userById == null) throw new ServiceException("未查询到该用户");
-
-
     return CglibUtil.copy(userById, UserVo.class);
+  }
+
+  // 根据用户名查询用户信息
+  @Override
+  public UserVo selectByAccount(String account) {
+    // 根据账号查询用户
+    User user = userMapper.findByAccount(account);
+    if (user == null) throw new ServiceException("未查询到该用户");
+    return CglibUtil.copy(user, UserVo.class);
   }
 
 }
