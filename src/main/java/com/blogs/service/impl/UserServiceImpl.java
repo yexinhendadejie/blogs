@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     stringRedisTemplate.delete(email);
 
     // 验证完之后加入数据库
-    User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForEmailDto.getPwd1().getBytes()), null, email, Convert.toStr(System.currentTimeMillis()), UploadUtil.avatarPath());
+    User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForEmailDto.getPwd1().getBytes()), null, email, Convert.toStr(System.currentTimeMillis()), null);
     userMapper.insert(user);
   }
 
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
       if (selPhone != null) throw new ServiceException("手机号已经存在,请重新输入手机号");
 
       // 验证完之后加入数据库
-      User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForPhoneDto.getPwd().getBytes()), phone, null, Convert.toStr(System.currentTimeMillis()), UploadUtil.avatarPath());
+      User user = new User(UNAME, DigestUtils.md5DigestAsHex(registerForPhoneDto.getPwd().getBytes()), phone, null, Convert.toStr(System.currentTimeMillis()),null);
       userMapper.insert(user);
     }
   }
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
     if (!registerForUnameDto.getPwd1().equals(registerForUnameDto.getPwd2()))
       throw new ServiceException("两次密码不相同");
     // 验证完之后加入数据库
-    userMapper.insert(new User(registerForUnameDto.getUname(), DigestUtils.md5DigestAsHex(registerForUnameDto.getPwd1().getBytes()), null, null, Convert.toStr(System.currentTimeMillis()), UploadUtil.avatarPath()));
+    userMapper.insert(new User(registerForUnameDto.getUname(), DigestUtils.md5DigestAsHex(registerForUnameDto.getPwd1().getBytes()), null, null, Convert.toStr(System.currentTimeMillis()), null));
   }
 
 
@@ -144,6 +144,28 @@ public class UserServiceImpl implements UserService {
     user.setPwd(DigestUtils.md5DigestAsHex(updatePwdDto.getPwd().getBytes()));
     userMapper.updateById(user);
 
+  }
+
+  @Override
+  public String updatePwdUpgrade(UpdatePwdUpgradeDto updatePwdUpgradeDto) {
+
+    // 邮箱是否存在
+    User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getEmail, updatePwdUpgradeDto.getEmail()));
+    Optional.ofNullable(user.getEmail()).orElseThrow(() -> new ServiceException("邮箱不存在"));
+
+    // Redis从拿到token
+    String tokenUrl = stringRedisTemplate.opsForValue().get(updatePwdUpgradeDto.getEmail());
+    if (tokenUrl == null) throw new ServiceException("不存在token,邮件错误或者token已经失效");
+    // tokenUrl截取
+    String tokenUUID = tokenUrl.substring(tokenUrl.indexOf("=") + 1);
+
+    // 验证码验证成功之后删除验证码
+    stringRedisTemplate.delete(updatePwdUpgradeDto.getEmail());
+
+    user.setPwd(DigestUtils.md5DigestAsHex(updatePwdUpgradeDto.getPwd1().getBytes()));
+    userMapper.updateById(user);
+
+    return tokenUUID;
   }
 
   // 修改用户信息

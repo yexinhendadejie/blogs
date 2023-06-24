@@ -25,6 +25,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
           .notMatch("/user/updatePwd")
           .notMatch("/user/login")
           .notMatch("/user/registerForEmail")
+          .notMatch("/user/updatePwdUpgrade")
           .notMatch("/user/registerForPhone")
           .notMatch("/user/registerForUname")
           .notMatch("/resources/static/public/images/default.jpeg")

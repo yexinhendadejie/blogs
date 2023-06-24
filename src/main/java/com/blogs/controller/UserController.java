@@ -54,6 +54,13 @@ public class UserController {
     return Resp.ok().msg("修改成功");
   }
 
+  // 修改密码升级版
+@PostMapping("/updatePwdUpgrade")
+public Resp<Void> updatePwdUpgrade(@Validated @RequestBody UpdatePwdUpgradeDto updatePwdUpgradeDto) {
+  userService.updatePwdUpgrade(updatePwdUpgradeDto);
+  return Resp.ok().msg("修改成功");
+}
+
   // 登出
   @GetMapping("/logout")
   public Resp<Void> logout() {

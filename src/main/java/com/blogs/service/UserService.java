@@ -23,6 +23,9 @@ public interface UserService {
     // 修改密码
     void updatePwd(UpdatePwdDto updatePwdDto);
 
+    // 修改密码升级版
+    String updatePwdUpgrade(UpdatePwdUpgradeDto updatePwdUpgradeDto);
+
     // 修改用户信息
     void updateUserInfo(UserDto userDto);
 
