@@ -171,9 +171,6 @@ public class UserServiceImpl implements UserService {
   // 修改用户信息
   @Override
   public void updateUserInfo(UserDto userDto) {
-    if (userDto.getId() != StpUtil.getLoginIdAsInt()) {
-      throw new ServiceException("不得修改其他用户信息");
-    }
 
     User user = CglibUtil.copy(userDto, User.class);
 
@@ -187,14 +184,14 @@ public class UserServiceImpl implements UserService {
     if (updateEmailPhoneDto.getLoginType().equals("email")) {
       // 验证邮箱
       User user = userMapper.selectOne(Wrappers.<User>query().eq("id", StpUtil.getLoginIdAsInt()));
-      if (user.getEmail().equals(updateEmailPhoneDto.getAccount()))
+      if (user.getEmail().equals(updateEmailPhoneDto.getEmail()))
         throw new ServiceException("修改的邮箱和旧邮箱相同");
-      user.setEmail(updateEmailPhoneDto.getAccount());
+      user.setEmail(updateEmailPhoneDto.getEmail());
       user.setId(StpUtil.getLoginIdAsInt());
 
       // Redis从拿到验证码
       if (!updateEmailPhoneDto.getCaptcha().equals("88888")) {
-        String captcha = stringRedisTemplate.opsForValue().get(updateEmailPhoneDto.getAccount());
+        String captcha = stringRedisTemplate.opsForValue().get(updateEmailPhoneDto.getEmail());
         if (!updateEmailPhoneDto.getCaptcha().equals(captcha)) throw new ServiceException("验证码错误，请重新输入");
       }
 
@@ -214,14 +211,14 @@ public class UserServiceImpl implements UserService {
     if (updateEmailPhoneDto.getLoginType().equals("phone")) {
       // 验证邮箱
       User user = userMapper.selectOne(Wrappers.<User>query().eq("id", StpUtil.getLoginIdAsInt()));
-      if (user.getPhone().equals(updateEmailPhoneDto.getAccount()))
+      if (user.getPhone().equals(updateEmailPhoneDto.getEmail()))
         throw new ServiceException("修改的电话和旧电话相同");
-      user.setPhone(updateEmailPhoneDto.getAccount());
+      user.setPhone(updateEmailPhoneDto.getEmail());
       user.setId(StpUtil.getLoginIdAsInt());
 
       // Redis从拿到验证码
       if (!updateEmailPhoneDto.getCaptcha().equals("88888")) {
-        String captcha = stringRedisTemplate.opsForValue().get(updateEmailPhoneDto.getAccount());
+        String captcha = stringRedisTemplate.opsForValue().get(updateEmailPhoneDto.getEmail());
         if (!updateEmailPhoneDto.getCaptcha().equals(captcha)) throw new ServiceException("验证码错误，请重新输入");
       }
 
@@ -254,10 +251,6 @@ public class UserServiceImpl implements UserService {
   // 根据ID查询用户信息
   @Override
   public UserVo selectById(Integer id) {
-
-    // 判断登录用户
-    if (id != StpUtil.getLoginIdAsInt()) throw new ServiceException("不得修改其他用户信息");
-
     //查询用户
     User userById = userMapper.selectById(id);
     if (userById == null) throw new ServiceException("未查询到该用户");

@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +16,7 @@ public class BlogVo {
   private Integer id;
 
   // user用户自己的博客
-  private Integer userId;
+  private Integer uuid;
 
   // 博客标题
   private String title;
@@ -27,6 +29,9 @@ public class BlogVo {
 
   // 收藏
   private Integer collectionCount;
+
+  // 浏览量
+  private Integer viewCount;
 
   // 点赞
 

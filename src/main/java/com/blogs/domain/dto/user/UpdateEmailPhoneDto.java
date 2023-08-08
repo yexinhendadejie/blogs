@@ -12,8 +12,8 @@ public class UpdateEmailPhoneDto {
 
   private Integer id;
 
-  // 用户名 手机号码 邮箱
-  private String account;
+  // 用户名 手机号码 邮箱 后期省略了 手机号码和 用户名
+  private String email;
 
   @NotBlank(message = "验证码不得为空")
   @Size(min = 5, max = 5, message = "验证码位数不正确")

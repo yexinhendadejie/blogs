@@ -3,9 +3,10 @@ package com.blogs.domain.dto.page;
 import lombok.Data;
 
 import java.sql.Timestamp;
-@Data
-public class PagePostDto extends PageDto {
+import java.util.List;
 
+@Data
+public class PageBlogDto extends PageDto {
 
   // user用户自己的博客
   private Integer userId;
@@ -14,7 +15,7 @@ public class PagePostDto extends PageDto {
   private String title;
 
   // 博客的标签
-  private String tag;
+  private List<String> tag;
 
   // 博客的内容
   private String details;

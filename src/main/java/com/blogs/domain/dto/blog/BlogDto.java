@@ -1,4 +1,4 @@
-package com.blogs.domain.dto.post;
+package com.blogs.domain.dto.blog;
 
 import lombok.Data;
 

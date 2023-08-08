@@ -4,6 +4,7 @@ import com.blogs.common.config.RegConfig;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
@@ -19,7 +20,8 @@ public class UserDto {
   @Size(max = 9, message = "昵称不得超过9位数")
   private String uname;
 
-  // 出生日期
+  // 出生日期不能为空
+  @NotNull(message = "出生日期不能为空")
   private Timestamp born;
 
   // 兴趣爱好

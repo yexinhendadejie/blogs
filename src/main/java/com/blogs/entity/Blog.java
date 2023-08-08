@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -37,12 +38,17 @@ public class Blog {
   // 收藏
   private Integer collectionCount;
 
-  // 点赞
+  // 浏览量
+  private Integer viewCount;
 
+  // 点赞
   private Integer support;
 
   // 点踩
   private Integer down;
+
+  // 软删除
+  private Integer status;
 
   // UpdateTime
   private Timestamp createTime;
