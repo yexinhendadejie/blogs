@@ -44,5 +44,8 @@ public interface UserService {
     // 根据账号查询用户信息
     UserVo selectByAccount(String account);
 
+    // 修改图片存入数据库
+    void updateAvatar(ImageDto imageDto);
+
 
 }

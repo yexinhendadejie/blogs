@@ -98,4 +98,11 @@ public Resp<Void> updatePwdUpgrade(@Validated @RequestBody UpdatePwdUpgradeDto u
   public Resp<UserVo> selectByAccount(@PathVariable String account) {
     return Resp.ok(userService.selectByAccount(account));
   }
+
+  // 添加图片
+  @PostMapping("/updateAvatar")
+  public Resp<Void> updateAvatar(@RequestBody ImageDto imageDto) {
+    userService.updateAvatar(imageDto);
+    return Resp.ok().msg("修改成功");
+  }
 }

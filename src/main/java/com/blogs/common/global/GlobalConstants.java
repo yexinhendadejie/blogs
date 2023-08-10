@@ -1,7 +1,6 @@
 package com.blogs.common.global;
 
 import cn.hutool.core.convert.Convert;
-import io.swagger.models.auth.In;
 
 public class GlobalConstants {
 
@@ -12,6 +11,8 @@ public class GlobalConstants {
 
     public static final Integer PAGE_SIZE_DEFAULT = 3;
     public static final String UNAME = "user"+ Convert.toStr(System.currentTimeMillis());
+
+    public static final int DEFAULT_PART_SIZE = 5 * 1024 * 1024; // 5MB
 
     public static final Integer RECRUITMENT_LIST_PAGE_SIZE = 10;
     public static final Integer HUNT_LIST_PAGE_SIZE = 10;

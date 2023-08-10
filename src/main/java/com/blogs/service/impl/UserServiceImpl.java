@@ -7,7 +7,6 @@ import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.blogs.common.exception.ServiceException;
-import com.blogs.common.global.GlobalConstants;
 import com.blogs.domain.dto.user.*;
 import com.blogs.domain.vo.user.LoginVo;
 import com.blogs.domain.vo.user.UpdateEmailPhoneVo;
@@ -16,9 +15,7 @@ import com.blogs.domain.vo.user.UserVo;
 import com.blogs.entity.User;
 import com.blogs.mapper.UserMapper;
 import com.blogs.service.UserService;
-import com.blogs.utils.BUtils;
 import com.blogs.utils.UploadUtil;
-import io.netty.util.internal.StringUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -264,6 +261,14 @@ public class UserServiceImpl implements UserService {
     User user = userMapper.findByAccount(account);
     if (user == null) throw new ServiceException("未查询到该用户");
     return CglibUtil.copy(user, UserVo.class);
+  }
+
+  // 存入图片进数据库
+  @Override
+  public void updateAvatar(ImageDto imageDto) {
+    User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getId, imageDto.getId()));
+    user.setAvatar(imageDto.getAvatar());
+    userMapper.updateById(user);
   }
 
 }

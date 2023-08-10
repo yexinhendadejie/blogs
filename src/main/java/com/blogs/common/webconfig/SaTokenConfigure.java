@@ -42,6 +42,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
           .notMatch("/send/**")
           .notMatch("/user/updatePwd")
           .notMatch("/user/login")
+          .notMatch("/minio/**")
           .notMatch("/user/registerForEmail")
           .notMatch("/user/updatePwdUpgrade")
           .notMatch("/user/registerForPhone")

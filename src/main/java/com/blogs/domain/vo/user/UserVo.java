@@ -24,6 +24,8 @@ public class UserVo {
   @Sensitive(strategy = SensitiveStrategy.PASSWORD)
   private String pwd;
 
+  // 头像
+  private String avatar;
   // 出生日期
   private Timestamp born;
 

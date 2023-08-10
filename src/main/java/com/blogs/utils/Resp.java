@@ -3,7 +3,9 @@ package com.blogs.utils;
 import com.blogs.common.resultcode.ResultCodeEnum;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Resp<T> {
@@ -17,6 +19,16 @@ public class Resp<T> {
     this.code = resultCode.getCode();
     this.message = resultCode.getMessage();
     this.data = data;
+  }
+
+  public Resp<T> put(String key, Object value) {
+    if (data == null) {
+      data = (T) new HashMap<String, Object>();
+    }
+    if (data instanceof Map) {
+      ((Map<String, Object>) data).put(key, value);
+    }
+    return this;
   }
 
   /**
