@@ -75,7 +75,7 @@ public class MinioController {
   }
 
   @PostMapping("/delete")
-  public Resp remove(String url) {
+  public Resp remove(@RequestParam("url") String url) {
     String objName = url.substring(url.lastIndexOf(prop.getBucketName()+"/") + prop.getBucketName().length()+1);
     minioUtil.remove(objName);
     return Resp.ok().put("objName",objName);

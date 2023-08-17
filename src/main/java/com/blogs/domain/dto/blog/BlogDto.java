@@ -8,8 +8,7 @@ import java.sql.Timestamp;
 @Data
 public class BlogDto {
 
-//  @TableId(value = "id",type = IdType.AUTO)
-//  private Integer id;
+  private Integer id;
 
   // user用户自己的博客
   private Integer userId;

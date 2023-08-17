@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blogs.mapper.BlogMapper">
+
+    <update id="updateBlog">
+        update blog set
+        <if test="title != null">title = #{title},</if>
+        <if test="tag != null">tag = #{tag},</if>
+        <if test="desc != null">`desc` = #{desc},</if>
+        <if test="details != null">details = #{details}</if>
+        where id = #{id}
+    </update>
+</mapper>
