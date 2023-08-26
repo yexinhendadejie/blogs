@@ -3,12 +3,11 @@ package com.blogs.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -35,9 +34,6 @@ public class Blog {
   // 博客的内容
   private String details;
 
-  // 收藏
-  private Integer collectionCount;
-
   // 浏览量
   private Integer viewCount;
 
@@ -49,6 +45,9 @@ public class Blog {
 
   // 软删除
   private Integer status;
+
+    // 0->灭 1->亮
+    private Boolean iconColor;
 
   // UpdateTime
   private Timestamp createTime;

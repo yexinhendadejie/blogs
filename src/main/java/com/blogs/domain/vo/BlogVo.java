@@ -28,9 +28,6 @@ public class BlogVo {
   // 博客的内容
   private String details;
 
-  // 收藏
-  private Integer collectionCount;
-
   // 浏览量
   private Integer viewCount;
 
@@ -40,6 +37,10 @@ public class BlogVo {
 
   // 点踩
   private Integer down;
+
+
+    // 0->灭 1->亮
+    private Boolean iconColor;
 
   // UpdateTime
   private Timestamp createTime;

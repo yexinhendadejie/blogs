@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blogs.mapper.CollectionMapper">
+    <delete id="deleteByBlogId">
+        DELETE FROM collection
+        WHERE blog_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <select id="selectByUserId" resultMap="findCollection">
+        SELECT *
+        FROM collection
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <resultMap id="findCollection" type="com.blogs.entity.Collection">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="blog_id" property="blogId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="blog" select="com.blogs.mapper.BlogMapper.findOneById"
+                     column="blog_id" javaType="com.blogs.entity.Blog"/>
+    </resultMap>
+</mapper>

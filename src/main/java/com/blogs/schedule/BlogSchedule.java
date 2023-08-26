@@ -28,7 +28,7 @@ public class BlogSchedule {
     Long overdueDays = System.currentTimeMillis() - ScheduleEnum.BLOG.getOverdueTime();
     // 查询过期七天的博客中间表id
     List<Integer> expiredBlogId = blogMapper.selectList(Wrappers.<com.blogs.entity.Blog>lambdaQuery()
-                    .ge(com.blogs.entity.Blog::getCreateTime, overdueDays))
+                    .ge(Blog::getCreateTime, overdueDays))
             .stream()
             .map(Blog::getId)
             .collect(Collectors.toList());

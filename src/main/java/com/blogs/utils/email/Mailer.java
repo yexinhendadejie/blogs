@@ -4,7 +4,6 @@ import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import com.blogs.common.global.GlobalConstants;
 import com.blogs.utils.BUtils;
-import com.blogs.utils.BUtils;
 
 public class Mailer {
   private Integer expirationTime = GlobalConstants.CAPTCHA_EXPIRED;
@@ -38,7 +37,8 @@ public class Mailer {
     account.setSocketFactoryClass("javax.net.ssl.SSLSocketFactory");
 
     String captcha = BUtils.getRandom(digit);
-    MailUtil.send(account, to, title, "<div style=\"background:#f8f8f8\">\n" +
+
+      MailUtil.send(account, to, title, "<div style=\"background:#f8f8f8\">\n" +
         "  <h2 style=\"text-align:center;color:#fff;background: #6762C5;padding: 20px 0;\">邮箱验证码</h2>\n" +
         "    <div style=\"padding: 20px 30px 50px;\">\n" +
         "      <p style=\"font-size:20px\">你好, 用户</p>\n" +
@@ -49,7 +49,6 @@ public class Mailer {
         "</div>", true);
     return captcha;
   }
-
   // 发送验证码重载方法
   public String sendCaptcha(String to) {
     return sendCaptcha(to, GlobalConstants.CAPTCHA_DIGIT);

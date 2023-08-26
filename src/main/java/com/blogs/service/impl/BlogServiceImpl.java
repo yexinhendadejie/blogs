@@ -12,6 +12,7 @@ import com.blogs.domain.dto.page.PageBlogDto;
 import com.blogs.domain.vo.BlogVo;
 import com.blogs.entity.Blog;
 import com.blogs.mapper.BlogMapper;
+import com.blogs.mapper.CollectionMapper;
 import com.blogs.service.BlogService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,9 @@ public class BlogServiceImpl implements BlogService {
 
   @Resource
   private BlogMapper blogMapper;
+
+  @Resource
+  private CollectionMapper collectionMapper;
 
   // 查看所有博
   @Override
@@ -91,6 +95,9 @@ public class BlogServiceImpl implements BlogService {
   @Override
   public void deleteBlogHard(List<Integer> blogIds) {
     // 先删除图片地址
+
+    // 先删除收藏表里的博客
+    collectionMapper.deleteByBlogId(blogIds);
     // 直接删除博客
     blogMapper.deleteBatchIds(blogIds);
   }
