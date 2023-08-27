@@ -242,6 +242,7 @@ public class BlogServiceImpl implements BlogService {
                 .setSql("down=down+1"));
     }
 
+
     @Override
     public void downCancel(Integer id) {
         // 先去数据库查有没有点踩信息
