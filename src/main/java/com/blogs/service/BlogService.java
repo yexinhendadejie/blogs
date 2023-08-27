@@ -51,4 +51,5 @@ public interface BlogService {
 
     // 已经踩但是取消了
     void downCancel(Integer id);
+
 }

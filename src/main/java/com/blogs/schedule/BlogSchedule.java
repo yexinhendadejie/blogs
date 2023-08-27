@@ -15,24 +15,24 @@ import java.util.stream.Collectors;
 @Component
 public class BlogSchedule {
 
-  @Resource
-  BlogMapper blogMapper;
+    @Resource
+    BlogMapper blogMapper;
 
-  @Resource
-  BlogService blogService;
+    @Resource
+    BlogService blogService;
 
-  // 每天凌晨1点半执行
-  @Scheduled(cron = "0 30 1 * * ?")
-  public void hardDelTask() {
-    // 获取七天前时间
-    Long overdueDays = System.currentTimeMillis() - ScheduleEnum.BLOG.getOverdueTime();
-    // 查询过期七天的博客中间表id
-    List<Integer> expiredBlogId = blogMapper.selectList(Wrappers.<com.blogs.entity.Blog>lambdaQuery()
-                    .ge(Blog::getCreateTime, overdueDays))
-            .stream()
-            .map(Blog::getId)
-            .collect(Collectors.toList());
-    // 调用 service 执行硬删除操作
-    blogService.deleteBlogHard(expiredBlogId);
-  }
+    // 每天凌晨1点半执行
+    @Scheduled(cron = "0 30 1 * * ?")
+    public void hardDelTask() {
+        // 获取七天前时间
+        Long overdueDays = System.currentTimeMillis() - ScheduleEnum.BLOG.getOverdueTime();
+        // 查询过期七天的博客中间表id
+        List<Integer> expiredBlogId = blogMapper.selectList(Wrappers.<com.blogs.entity.Blog>lambdaQuery().eq(Blog::getStatus, 1)
+                        .le(Blog::getUpdateTime, overdueDays))
+                .stream()
+                .map(Blog::getId)
+                .collect(Collectors.toList());
+        // 调用 service 执行硬删除操作
+        blogService.deleteBlogHard(expiredBlogId);
+    }
 }

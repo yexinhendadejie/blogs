@@ -46,9 +46,6 @@ public class Blog {
   // 软删除
   private Integer status;
 
-    // 0->灭 1->亮
-    private Boolean iconColor;
-
   // UpdateTime
   private Timestamp createTime;
 

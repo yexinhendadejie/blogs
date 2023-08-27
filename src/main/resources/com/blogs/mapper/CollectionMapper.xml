@@ -3,7 +3,7 @@
 <mapper namespace="com.blogs.mapper.CollectionMapper">
     <delete id="deleteByBlogId">
         DELETE FROM collection
-        WHERE blog_id IN
+        WHERE target_id IN
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -20,10 +20,11 @@
     <resultMap id="findCollection" type="com.blogs.entity.Collection">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
-        <result column="blog_id" property="blogId"/>
+        <result column="target_id" property="targetId"/>
+        <result column="is_collection" property="isCollection"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <association property="blog" select="com.blogs.mapper.BlogMapper.findOneById"
-                     column="blog_id" javaType="com.blogs.entity.Blog"/>
+                     column="target_id" javaType="com.blogs.entity.Blog"/>
     </resultMap>
 </mapper>

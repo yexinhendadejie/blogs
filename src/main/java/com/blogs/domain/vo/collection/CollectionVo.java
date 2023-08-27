@@ -15,17 +15,13 @@ public class CollectionVo {
     private Integer id;
 
     // 收藏的帖子id
-    private Integer blogId;
+    private Integer targetId;
 
     // 当前用户的id
     private Integer userId;
 
-    // 收藏表的用户
-    private Integer collectionUserId;
-
     // 0->不亮图标 1->亮图标
-    private Integer status;
-
+    private Integer isCollection;
 
     // 博客信息
     private Blog blog;

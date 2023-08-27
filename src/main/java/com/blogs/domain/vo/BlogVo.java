@@ -38,10 +38,6 @@ public class BlogVo {
   // 点踩
   private Integer down;
 
-
-    // 0->灭 1->亮
-    private Boolean iconColor;
-
   // UpdateTime
   private Timestamp createTime;
 

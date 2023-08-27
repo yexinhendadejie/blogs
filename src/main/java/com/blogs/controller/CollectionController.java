@@ -24,6 +24,20 @@ public class CollectionController {
         return Resp.ok(collectionService.findAllCollection(pageCollectionDto));
     }
 
+    // 收藏博客
+    @PostMapping("/collectionBlog/{blogId}")
+    public Resp<Void> collectionBlog(@PathVariable Integer blogId) {
+        collectionService.collectionBlog(blogId);
+        return Resp.ok().msg("收藏成功");
+    }
+
+    // 取消收藏博客
+    @PostMapping("/cancelCollection/{blogId}")
+    public Resp<Void> cancelCollection(@PathVariable Integer blogId) {
+        collectionService.cancelCollection(blogId);
+        return Resp.ok().msg("取消收藏成功");
+    }
+
     // 删除收藏
     @DeleteMapping("/deleteCollection")
     public Resp<Void> deleteCollection(@Validated @RequestBody DelBlogDto delBlogDto) {

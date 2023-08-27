@@ -1,7 +1,6 @@
 package com.blogs.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +11,7 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Collection {
+public class UserLikeDetail {
 
     /**
      * 主键id
@@ -20,25 +19,23 @@ public class Collection {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    // 收藏的帖子id
-    private Integer targetId;
+    // 点赞/点踩用户的id
 
-    // 当前用户的id
     private Integer userId;
 
+    // 被点赞/点踩用户的id
+    private Integer targetId;
 
-    // 是否收藏 0->不收藏 1->收藏
-    private Boolean isCollection;
+    // 点赞/点踩的帖子
+    private Integer targetType;
 
-    @TableField(exist = false)
-    // 博客信息
-    private Blog blog;
+    // 点赞还是点踩 1点赞 0点踩
+    private Integer likeType;
 
-    // UpdateTime
+    // 修改时间
     private Timestamp updateTime;
 
-    // UpdateTime
+    // 创建时间
     private Timestamp createTime;
-
 
 }

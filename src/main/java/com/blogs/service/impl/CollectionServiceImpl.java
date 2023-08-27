@@ -2,6 +2,8 @@ package com.blogs.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.extra.cglib.CglibUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.blogs.common.exception.ServiceException;
 import com.blogs.common.global.GlobalConstants;
 import com.blogs.domain.dto.blog.DelBlogDto;
 import com.blogs.domain.dto.page.PageCollectionDto;
@@ -38,6 +40,27 @@ public class CollectionServiceImpl implements CollectionService {
         pageInfo.setPageNum(page.getPageNum());
         pageInfo.setPageSize(GlobalConstants.RECRUITMENT_LIST_PAGE_SIZE);
         return pageInfo;
+    }
+
+    @Override
+    public void collectionBlog(Integer blogId) {
+        Collection selCollection = collectionMapper.selectOne(Wrappers.<Collection>lambdaQuery()
+                .eq(Collection::getUserId, StpUtil.getLoginIdAsInt())
+                .eq(Collection::getTargetId, blogId));
+        if (selCollection != null) throw new ServiceException("已收藏");
+        Collection collection = new Collection();
+        collection.setTargetId(blogId);
+        // 收藏博客为1
+        collection.setIsCollection(true);
+        collection.setUserId(StpUtil.getLoginIdAsInt());
+        collectionMapper.insert(collection);
+    }
+
+    @Override
+    public void cancelCollection(Integer blogId) {
+        collectionMapper.delete(Wrappers.<Collection>lambdaQuery()
+                .eq(Collection::getUserId, StpUtil.getLoginIdAsInt())
+                .eq(Collection::getTargetId, blogId));
     }
 
     @Override
