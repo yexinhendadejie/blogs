@@ -183,7 +183,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void support(Integer id) {
         // 先查看有没有点赞信息
-        if (getUserLikeDetailFowSupport(id) != null) throw new ServiceException("已经点赞了！");
+        if (getUserLikeDetailFowSupport(id) != null) return;
         // 将新增的数据加入userLikeDetail方便以后维护
         UserLikeDetail userLikeDetail = new UserLikeDetail();
         userLikeDetail.setUserId(StpUtil.getLoginIdAsInt());
@@ -228,7 +228,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void down(Integer id) {
         // 先查看有没有点踩信息
-        if (getUserLikeDetailForDown(id) != null) throw new ServiceException("已经点踩了！");
+        if (getUserLikeDetailForDown(id) != null) return;
         // 将点踩信息放到userLikeDetail
         UserLikeDetail userLikeDetail = new UserLikeDetail();
         userLikeDetail.setUserId(StpUtil.getLoginIdAsInt());

@@ -21,7 +21,7 @@ public class CollectionVo {
     private Integer userId;
 
     // 0->不亮图标 1->亮图标
-    private Integer isCollection;
+    private Boolean isCollection;
 
     // 博客信息
     private Blog blog;

@@ -15,6 +15,7 @@
         FROM collection
         WHERE user_id = #{userId}
         ORDER BY create_time DESC
+        LIMIT #{startRow}, #{pageSize}
     </select>
 
     <resultMap id="findCollection" type="com.blogs.entity.Collection">

@@ -2,18 +2,15 @@ package com.blogs.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.extra.cglib.CglibUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.blogs.common.exception.ServiceException;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.blogs.common.global.GlobalConstants;
-import com.blogs.domain.dto.blog.DelBlogDto;
 import com.blogs.domain.dto.page.PageCollectionDto;
 import com.blogs.domain.vo.collection.CollectionVo;
 import com.blogs.entity.Collection;
 import com.blogs.mapper.CollectionMapper;
 import com.blogs.service.CollectionService;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,47 +23,54 @@ public class CollectionServiceImpl implements CollectionService {
     private CollectionMapper collectionMapper;
 
     @Override
-    public PageInfo<CollectionVo> findAllCollection(PageCollectionDto pageCollectionDto) {
+    public IPage<CollectionVo> findAllCollection(PageCollectionDto pageCollectionDto) {
+        Page<Collection> page = new Page<>(pageCollectionDto.getPageNum(), GlobalConstants.PAGE_SIZE_DEFAULT);
 
-        // 使用 PageHelper 开始分页
-        Page page = PageHelper.startPage(pageCollectionDto.getPageNum(), GlobalConstants.PAGE_SIZE_DEFAULT);
+        // 进行分页查询，传入分页对象和查询条件
+        IPage<Collection> collectionIPage = collectionMapper.selectPage(page, Wrappers.<Collection>lambdaQuery()
+                .eq(Collection::getUserId, StpUtil.getLoginIdAsInt())
+                .orderByDesc(Collection::getCreateTime));
 
-        // 查询数据
-        List<Collection> collectionList = collectionMapper.selectByUserId(StpUtil.getLoginIdAsInt());
-        List<CollectionVo> collectionVo = CglibUtil.copyList(collectionList, CollectionVo::new);
+        // 手动进行分页查询，调用自己的手写 SQL 查询 selectByUserId
+        List<Collection> collectionList = collectionMapper.selectByUserId(
+                StpUtil.getLoginIdAsInt(),
+                (pageCollectionDto.getPageNum() - 1) * GlobalConstants.PAGE_SIZE_DEFAULT,
+                GlobalConstants.PAGE_SIZE_DEFAULT);
 
-        PageInfo<CollectionVo> pageInfo = new PageInfo<>(collectionVo);
-        pageInfo.setTotal(page.getTotal());
-        pageInfo.setPageNum(page.getPageNum());
-        pageInfo.setPageSize(GlobalConstants.RECRUITMENT_LIST_PAGE_SIZE);
+        // 将查询结果转换为 CollectionVo 对象列表
+        List<CollectionVo> collectionVoList = CglibUtil.copyList(collectionList, CollectionVo::new);
+
+        // 创建 MyBatis Plus 的分页对象，并将查询结果设置进去
+        IPage<CollectionVo> pageInfo = new Page<>(pageCollectionDto.getPageNum(), GlobalConstants.PAGE_SIZE_DEFAULT);
+        pageInfo.setRecords(collectionVoList);
+        pageInfo.setTotal(collectionIPage.getTotal());
+
         return pageInfo;
+
     }
 
     @Override
-    public void collectionBlog(Integer blogId) {
+    public String collectionBlog(Integer blogId) {
         Collection selCollection = collectionMapper.selectOne(Wrappers.<Collection>lambdaQuery()
                 .eq(Collection::getUserId, StpUtil.getLoginIdAsInt())
                 .eq(Collection::getTargetId, blogId));
-        if (selCollection != null) throw new ServiceException("已收藏");
+        if (selCollection != null) {
+            // 就取消收藏博客
+            collectionMapper.delete(Wrappers.<Collection>lambdaQuery()
+                    .eq(Collection::getUserId, StpUtil.getLoginIdAsInt())
+                    .eq(Collection::getTargetId, blogId));
+            return "取消收藏成功";
+        }
+
         Collection collection = new Collection();
         collection.setTargetId(blogId);
         // 收藏博客为1
         collection.setIsCollection(true);
         collection.setUserId(StpUtil.getLoginIdAsInt());
         collectionMapper.insert(collection);
+        return "收藏成功";
     }
-
-    @Override
-    public void cancelCollection(Integer blogId) {
-        collectionMapper.delete(Wrappers.<Collection>lambdaQuery()
-                .eq(Collection::getUserId, StpUtil.getLoginIdAsInt())
-                .eq(Collection::getTargetId, blogId));
-    }
-
-    @Override
-    public void deleteCollection(DelBlogDto delBlogDto) {
-        collectionMapper.deleteByBlogId(delBlogDto.getBlogIds());
-    }
+    //
 }
 // 分页查询
 //        Page<Collection> page = new Page<>(pageCollectionDto.getPageNum(), GlobalConstants.PAGE_SIZE_DEFAULT);

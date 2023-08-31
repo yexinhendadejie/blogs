@@ -11,7 +11,9 @@ import java.util.List;
 public interface CollectionMapper extends BaseMapper<Collection> {
 
     // 根据用户id查询收藏
-    List<Collection> selectByUserId(Integer userId);
+    List<Collection> selectByUserId(@Param("userId") int userId,
+                                    @Param("startRow") int startRow,
+                                    @Param("pageSize") int pageSize);
 
     // 根据博客id删除收藏
     void deleteByBlogId(@Param("list") List<Integer> blogId);
