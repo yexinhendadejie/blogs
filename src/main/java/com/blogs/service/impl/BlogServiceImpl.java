@@ -177,7 +177,7 @@ public class BlogServiceImpl implements BlogService {
                 .eq(UserLikeDetail::getUserId, StpUtil.getLoginIdAsInt())
                 .eq(UserLikeDetail::getTargetId, id)
                 .eq(UserLikeDetail::getTargetType, TypeEnum.BLOG.getId())
-                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.support.getId()));
+                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.SUPPORT.getId()));
     }
 
     @Override
@@ -189,7 +189,7 @@ public class BlogServiceImpl implements BlogService {
         userLikeDetail.setUserId(StpUtil.getLoginIdAsInt());
         userLikeDetail.setTargetId(id);
         userLikeDetail.setTargetType(TypeEnum.BLOG.getId());
-        userLikeDetail.setLikeType(LikeTypeEnum.support.getId());
+        userLikeDetail.setLikeType(LikeTypeEnum.SUPPORT.getId());
 
         userLikeDetailMapper.insert(userLikeDetail);
         // 直接博客总数修改+1 上面是维护
@@ -208,7 +208,7 @@ public class BlogServiceImpl implements BlogService {
                 .eq(UserLikeDetail::getUserId, StpUtil.getLoginIdAsInt())
                 .eq(UserLikeDetail::getTargetId, id)
                 .eq(UserLikeDetail::getTargetType, TypeEnum.BLOG.getId())
-                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.support.getId()));
+                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.SUPPORT.getId()));
 
         blogMapper.update(null, Wrappers.<Blog>lambdaUpdate()
                 .eq(Blog::getId, id)
@@ -221,7 +221,7 @@ public class BlogServiceImpl implements BlogService {
                 .eq(UserLikeDetail::getUserId, StpUtil.getLoginIdAsInt())
                 .eq(UserLikeDetail::getTargetId, id)
                 .eq(UserLikeDetail::getTargetType, TypeEnum.BLOG.getId())
-                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.down.getId()));
+                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.DOWN.getId()));
     }
 
 
@@ -234,7 +234,7 @@ public class BlogServiceImpl implements BlogService {
         userLikeDetail.setUserId(StpUtil.getLoginIdAsInt());
         userLikeDetail.setTargetId(id);
         userLikeDetail.setTargetType(TypeEnum.BLOG.getId());
-        userLikeDetail.setLikeType(LikeTypeEnum.down.getId());
+        userLikeDetail.setLikeType(LikeTypeEnum.DOWN.getId());
         userLikeDetailMapper.insert(userLikeDetail);
 
         blogMapper.update(null, Wrappers.<Blog>lambdaUpdate()
@@ -253,7 +253,7 @@ public class BlogServiceImpl implements BlogService {
                 .eq(UserLikeDetail::getUserId, StpUtil.getLoginIdAsInt())
                 .eq(UserLikeDetail::getTargetId, id)
                 .eq(UserLikeDetail::getTargetType, TypeEnum.BLOG.getId())
-                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.down.getId()));
+                .eq(UserLikeDetail::getLikeType, LikeTypeEnum.DOWN.getId()));
         blogMapper.update(null, Wrappers.<Blog>lambdaUpdate()
                 .eq(Blog::getId, id)
                 .setSql("down=down-1"));

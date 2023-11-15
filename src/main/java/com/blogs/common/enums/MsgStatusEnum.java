@@ -5,9 +5,10 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum LikeTypeEnum {
-    DOWN(0, "点踩"),
-    SUPPORT(1, "点赞");
+public enum MsgStatusEnum {
+
+    REPLY_OUT(0, "外层的一级评论回复"),
+    REPLY_INSIDE(1, "内层的所有都属于二级回复");
 
     private Integer id;
     private String type;

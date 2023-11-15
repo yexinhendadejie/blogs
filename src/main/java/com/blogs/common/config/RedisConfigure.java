@@ -1,4 +1,4 @@
-package com.tzvtc.talksobackend.common.config;
+package com.blogs.common.config;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
