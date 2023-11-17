@@ -21,6 +21,7 @@ public enum ResultCodeEnum {
   SEND_FAIL(false, 40017, "发送失败"),
   FILE_UPLOAD_ERROR(false, 40018, "文件上传错误"),
   DATA_IS_NOT_SUPPORT(false, 40019, "数据不支持"),
+  MAXIMUM_NUMBER_OF_REQUESTS(false, 40020, "请求次数上限1分钟之后重试"),
   UNKNOWN_REASON(false, 49999, "未知错误"),
 
   SERVICE_SAME(false,300001,"两次数据相同"),

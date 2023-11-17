@@ -1,6 +1,8 @@
 package com.blogs.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONObject;
+import com.alibaba.excel.EasyExcel;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
@@ -11,6 +13,7 @@ import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.blogs.common.config.AliPayConfig;
+import com.blogs.common.validator.anno.LimitRequest;
 import com.blogs.domain.dto.page.PageAliPayDto;
 import com.blogs.domain.vo.aliPayVo.AliPayVo;
 import com.blogs.entity.AliPay;
@@ -23,7 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // xjlugv6874@sandbox.com
@@ -201,6 +206,44 @@ public class AliPayController {
     @DeleteMapping("/deleteAliPay/{id}")
     public Resp<Void> deleteAliPay(@PathVariable Integer id) {
         aliPayService.deleteAliPay(id);
+        return Resp.ok();
+    }
+
+    // 导出excel
+
+    // 接口限制 1分钟只能按一次
+    @LimitRequest(count = 1)
+    @PostMapping("/exportExcel")
+    public Resp<Void> download(HttpServletResponse response) {
+        try {
+
+            List<AliPay> aliPays = aliPayMapper.selectList(Wrappers.<AliPay>lambdaQuery()
+                    .eq(AliPay::getUserId, StpUtil.getLoginIdAsInt()));
+            // 循环打印alPays取出里面的status
+            for (AliPay aliPay : aliPays) {
+                if (aliPay.getStatus().equals("0")) {
+                    aliPay.setStatus("未支付");
+                } else if (aliPay.getStatus().equals("1")) {
+                    aliPay.setStatus("已支付");
+                } else if (aliPay.getStatus().equals("2")) {
+                    aliPay.setStatus("已退款");
+                }
+            }
+            // 设置文件导出的路径
+            String separator = File.separator;
+            String downloadsDirectory = System.getProperty("user.home") + separator + "Downloads" + separator;
+            System.out.println(downloadsDirectory);
+            String fileName = downloadsDirectory + "User" + System.currentTimeMillis() + ".xlsx";
+            System.out.println(fileName);
+//        File folder = new File(fileName);
+//        if (!folder.isDirectory()) {
+//            folder.mkdirs();
+//        }
+            // 这里需要指定写用哪个class去写，然后写到第一个sheet，名字为用户表，然后文件流会自动关闭
+            EasyExcel.write(fileName, AliPay.class).sheet("支付信息表").doWrite(aliPays);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Resp.ok();
     }
 }

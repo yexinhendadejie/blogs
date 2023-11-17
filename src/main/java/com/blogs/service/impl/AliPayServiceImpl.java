@@ -10,9 +10,12 @@ import com.blogs.domain.vo.aliPayVo.AliPayVo;
 import com.blogs.entity.AliPay;
 import com.blogs.mapper.AliPayMapper;
 import com.blogs.service.AliPayService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AliPayServiceImpl implements AliPayService {
@@ -58,5 +61,21 @@ public class AliPayServiceImpl implements AliPayService {
     @Override
     public void deleteAliPay(Integer id) {
         aliPayMapper.deleteById(id);
+    }
+
+    @Override
+    public List<AliPayVo> getAliPayList() {
+        List<AliPay> aliPaysList = aliPayMapper.selectList(Wrappers.<AliPay>lambdaQuery()
+                .eq(AliPay::getUserId, StpUtil.getLoginIdAsInt()));
+        // Map AliPay entities to AliPayVO
+        List<AliPayVo> aliPayVOList = aliPaysList.stream()
+                .map(aliPay -> {
+                    AliPayVo aliPayVo = new AliPayVo();
+                    BeanUtils.copyProperties(aliPay, aliPayVo);
+                    return aliPayVo;
+                })
+                .collect(Collectors.toList());
+
+        return aliPayVOList;
     }
 }
