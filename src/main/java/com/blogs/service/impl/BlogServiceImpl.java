@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -260,5 +261,20 @@ public class BlogServiceImpl implements BlogService {
 
     }
 
-
+    @Override
+    public List<BlogVo> findByTag(List<String> tags) {
+        // 遍历tags
+        List<BlogVo> blogVos = new ArrayList<>();
+        ;
+        System.out.println(tags + "tags");
+        for (String tag : tags) {
+            System.out.println(tag + "tag");
+            // 根据tag查找所有的博客
+            Blog blog = blogMapper.findByTag(tag);
+            System.out.println(blog + "blog");
+            if (blog == null) throw new ServiceException("该博客不存在！");
+            blogVos.add(CglibUtil.copy(blog, BlogVo.class));
+        }
+        return blogVos;
+    }
 }

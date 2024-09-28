@@ -1,7 +1,5 @@
 package com.blogs.blogs;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.blogs.entity.AliPay;
 import com.blogs.entity.User;
 import com.blogs.mapper.AliPayMapper;
 import com.blogs.mapper.BlogMapper;
@@ -40,13 +38,32 @@ class BlogsApplicationTests {
         System.out.println(numbers);
     }
 
-    @Test
-    void setUSerInfo(){
-        // 查询所有
-        List<AliPay> aliPays = aliPayMapper.selectList(Wrappers.<AliPay>lambdaQuery()
-                .eq(AliPay::getUserId, 26));
-        System.out.println(aliPays);
+    interface b {
+        void c();
+    }
 
+    public class d implements b {
+        @Override
+        public void c() {
+            System.out.println("我执行了");
+        }
+    }
+
+
+
+    @Test
+    void a() {
+        b b = new d();
+        b.c();
+    }
+
+
+    public static void method() {
+        System.out.println("方法引用");
+        String a = null;
+        System.out.println(a);
+        a = "123";
+        System.out.println(a);
     }
 
 

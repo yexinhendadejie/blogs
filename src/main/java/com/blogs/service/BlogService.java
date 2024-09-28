@@ -52,4 +52,7 @@ public interface BlogService {
     // 已经踩但是取消了
     void downCancel(Integer id);
 
+    // 根据List tag查找所有的博客
+    List<BlogVo> findByTag(List<String> tags);
+
 }

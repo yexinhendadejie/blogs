@@ -10,4 +10,10 @@
         <if test="details != null">details = #{details}</if>
         where id = #{id}
     </update>
+    <select id="findByTag" resultType="com.blogs.entity.Blog">
+        select *
+        from blog
+        where tag like '%${tag}%'
+    </select>
+
 </mapper>

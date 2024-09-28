@@ -12,4 +12,8 @@ public interface BlogMapper extends BaseMapper<Blog> {
     // 根据id查询博客
     @Select("SELECT * FROM blog WHERE id = #{id}")
     Blog findOneById(Integer id);
+
+    // 根据List tag查找所有的博客
+    Blog findByTag(String tag);
+
 }

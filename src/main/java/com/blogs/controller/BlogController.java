@@ -1,6 +1,7 @@
 package com.blogs.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.blogs.domain.dto.Tags;
 import com.blogs.domain.dto.blog.BlogDto;
 import com.blogs.domain.dto.page.PageBlogDto;
 import com.blogs.domain.vo.BlogVo;
@@ -111,5 +112,11 @@ public class BlogController {
     public Resp<Void> downCancel(@PathVariable Integer id) {
         blogService.downCancel(id);
         return Resp.ok().msg("取消踩成功！");
+    }
+
+    // 根据List tag查找所有的博客
+    @PostMapping("/findByTag")
+    public Resp<List<BlogVo>> findByTag(@RequestBody Tags tags) {
+        return Resp.ok(blogService.findByTag(tags.getTags()));
     }
 }

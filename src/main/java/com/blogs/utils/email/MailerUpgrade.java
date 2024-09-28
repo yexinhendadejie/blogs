@@ -3,8 +3,6 @@ package com.blogs.utils.email;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import com.blogs.common.global.GlobalConstants;
-import com.blogs.utils.BUtils;
-import com.blogs.utils.BUtils;
 
 import java.util.UUID;
 
@@ -39,7 +37,7 @@ public class MailerUpgrade {
     account.setSslEnable(true);
     account.setSocketFactoryClass("javax.net.ssl.SSLSocketFactory");
 
-    String tokenUrl = "http://localhost:3314/#/forgetPasswordUpgradeSetPwd?token=" + UUID.randomUUID();
+      String tokenUrl = "http://localhost:3315/#/forgetPasswordUpgradeSetPwd?token=" + UUID.randomUUID();
     MailUtil.send(account, to, title, "<div style=\"background:#f8f8f8\">\n" +
         "  <h2 style=\"text-align:center;color:#fff;background: #6762C5;padding: 20px 0;\">邮箱验证码</h2>\n" +
         "    <div style=\"padding: 20px 30px 50px;\">\n" +

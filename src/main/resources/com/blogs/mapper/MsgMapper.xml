@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blogs.mapper.MsgMapper">
+
+    <select id="selectUnreadMsgCount" resultType="java.lang.Integer">
+        SELECT sender_id, COUNT(*) AS sender_count
+        FROM msg
+        WHERE receiver_id = 26
+          AND is_read = '0'
+        GROUP BY sender_id;
+    </select>
+</mapper>
